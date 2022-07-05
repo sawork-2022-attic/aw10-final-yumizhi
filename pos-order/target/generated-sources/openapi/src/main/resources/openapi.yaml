@@ -1,0 +1,169 @@
+openapi: 3.0.0
+info:
+  license:
+    name: MIT
+  title: Order
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /order:
+    post:
+      operationId: createOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                format: int64
+                type: integer
+          description: Order created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid order
+      summary: Create an order
+      x-contentType: application/json
+      x-accepts: application/json
+  /order/{id}:
+    get:
+      operationId: getOrder
+      parameters:
+      - description: Order ID
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: Order found
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Order not found
+      summary: Get an order
+      x-accepts: application/json
+components:
+  schemas:
+    Product:
+      example:
+        image: image
+        price: ""
+        name: name
+        id: id
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: double
+        image:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+    Products:
+      items:
+        $ref: '#/components/schemas/Product'
+      type: array
+    Error:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    Item:
+      example:
+        product:
+          image: image
+          price: ""
+          name: name
+          id: id
+        quantity: 6
+      properties:
+        product:
+          $ref: '#/components/schemas/Product'
+        quantity:
+          format: int32
+          type: integer
+      required:
+      - product
+      - quantity
+      type: object
+    Cart:
+      example:
+        items:
+        - product:
+            image: image
+            price: ""
+            name: name
+            id: id
+          quantity: 6
+        - product:
+            image: image
+            price: ""
+            name: name
+            id: id
+          quantity: 6
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Item'
+          type: array
+      required:
+      - items
+      type: object
+    Order:
+      example:
+        total: 1.4658129805029452
+        id: 0
+        cart:
+          items:
+          - product:
+              image: image
+              price: ""
+              name: name
+              id: id
+            quantity: 6
+          - product:
+              image: image
+              price: ""
+              name: name
+              id: id
+            quantity: 6
+      properties:
+        id:
+          format: int64
+          type: integer
+        cart:
+          $ref: '#/components/schemas/Cart'
+        total:
+          type: number
+      required:
+      - cart
+      - total
+      type: object

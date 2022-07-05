@@ -1,0 +1,98 @@
+openapi: 3.0.0
+info:
+  license:
+    name: MIT
+  title: Products
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /products:
+    get:
+      operationId: listProducts
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Products'
+          description: A paged array of products
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: List all products
+      tags:
+      - products
+      x-accepts: application/json
+      x-tags:
+      - tag: products
+  /products/{productId}:
+    get:
+      operationId: showProductById
+      parameters:
+      - description: The id of the product to retrieve
+        explode: false
+        in: path
+        name: productId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+          description: Expected response to a valid request
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      summary: Info for a specific product
+      tags:
+      - product
+      x-accepts: application/json
+      x-tags:
+      - tag: product
+components:
+  schemas:
+    Product:
+      example:
+        image: image
+        price: ""
+        name: name
+        id: id
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: double
+        image:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+    Products:
+      items:
+        $ref: '#/components/schemas/Product'
+      type: array
+    Error:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message
+      type: object
