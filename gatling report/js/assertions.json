@@ -1,0 +1,10 @@
+{
+  "simulation": "gatling.RecordedSimulation",
+  "simulationId": "recordedsimulation",
+  "start": 1657025475606,
+  "description": "final-really",
+  "scenarios": ["pos-test"],
+  "assertions": [
+
+  ]
+}
