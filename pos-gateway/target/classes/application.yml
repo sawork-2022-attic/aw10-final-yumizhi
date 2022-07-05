@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: pos-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: products
+          uri: lb://pos-products
+          predicates:
+            - Path=/api/products/**
+        - id: carts
+          uri: lb://pos-carts
+          predicates:
+            - Path=/api/cart/**
+        - id: order
+          uri: lb://pos-order
+          predicates:
+            - Path=/api/order/**
+        #- id: delivery
+        #  uri: lb://pos-delivery
+        #  predicates:
+        #    - Path=/api/delivery/**
+        - id: counter
+          uri: lb://pos-counter
+          predicates:
+            - Path=/api/counter/**
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8888/eureka/
+
+server:
+  port: 8081

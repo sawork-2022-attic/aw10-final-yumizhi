@@ -1,0 +1,175 @@
+openapi: 3.0.0
+info:
+  license:
+    name: MIT
+  title: Cart
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /cart:
+    get:
+      operationId: listCart
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+          description: A successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The request cannot be fulfilled due to bad syntax
+      summary: List all items of the cart
+      tags:
+      - Cart
+      x-accepts: application/json
+      x-tags:
+      - tag: Cart
+  /cart/add/{productId}:
+    post:
+      operationId: addToCart
+      parameters:
+      - description: The ID of the product to add to the cart
+        explode: false
+        in: path
+        name: productId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+          description: A successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The request cannot be fulfilled due to bad syntax
+      summary: Add an item to the cart
+      tags:
+      - Cart
+      x-accepts: application/json
+      x-tags:
+      - tag: Cart
+  /cart/checkout:
+    post:
+      operationId: checkoutCart
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                format: int64
+                type: integer
+          description: A successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The request cannot be fulfilled due to bad syntax
+      summary: Checkout the cart
+      tags:
+      - Cart
+      x-accepts: application/json
+      x-tags:
+      - tag: Cart
+components:
+  schemas:
+    Product:
+      example:
+        image: image
+        price: ""
+        name: name
+        id: id
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: double
+        image:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+    Products:
+      items:
+        $ref: '#/components/schemas/Product'
+      type: array
+    Error:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    Item:
+      example:
+        product:
+          image: image
+          price: ""
+          name: name
+          id: id
+        quantity: 0
+      properties:
+        product:
+          $ref: '#/components/schemas/Product'
+        quantity:
+          format: int32
+          type: integer
+      required:
+      - product
+      - quantity
+      type: object
+    Cart:
+      example:
+        items:
+        - product:
+            image: image
+            price: ""
+            name: name
+            id: id
+          quantity: 0
+        - product:
+            image: image
+            price: ""
+            name: name
+            id: id
+          quantity: 0
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Item'
+          type: array
+      required:
+      - items
+      type: object
+    Order:
+      properties:
+        id:
+          format: int64
+          type: integer
+        cart:
+          $ref: '#/components/schemas/Cart'
+        total:
+          type: number
+      required:
+      - cart
+      - total
+      type: object
