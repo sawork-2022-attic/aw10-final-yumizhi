@@ -1,0 +1,90 @@
+openapi: 3.0.0
+info:
+  license:
+    name: MIT
+  title: Counter
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /counter/checkout:
+    post:
+      operationId: checkout
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+        description: Cart to checkout
+        required: true
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                type: number
+          description: A successful response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The request cannot be fulfilled due to bad syntax
+      summary: Checkout products
+      tags:
+      - Counter
+      x-contentType: application/json
+      x-accepts: application/json
+      x-tags:
+      - tag: Counter
+components:
+  schemas:
+    Product:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: double
+        image:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+    Products:
+      items:
+        $ref: '#/components/schemas/Product'
+      type: array
+    Error:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    Item:
+      properties:
+        product:
+          $ref: '#/components/schemas/Product'
+        quantity:
+          format: int32
+          type: integer
+      required:
+      - product
+      - quantity
+      type: object
+    Cart:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Item'
+          type: array
+      required:
+      - items
+      type: object

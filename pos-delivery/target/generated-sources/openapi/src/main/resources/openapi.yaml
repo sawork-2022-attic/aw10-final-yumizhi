@@ -1,0 +1,151 @@
+openapi: 3.0.0
+info:
+  license:
+    name: MIT
+  title: Delivery
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /delivery/byid/{id}:
+    get:
+      operationId: getDeliveryById
+      parameters:
+      - description: Delivery ID
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+          description: Delivery found
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid delivery
+      summary: get delivery by id
+      x-accepts: application/json
+  /delivery/byorder/{orderId}:
+    get:
+      operationId: findDeliveryByOrderId
+      parameters:
+      - description: Order ID
+        explode: false
+        in: path
+        name: orderId
+        required: true
+        schema:
+          format: int64
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+          description: Delivery found
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid delivery
+      summary: find delivery by order id
+      x-accepts: application/json
+components:
+  schemas:
+    Product:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: double
+        image:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+    Products:
+      items:
+        $ref: '#/components/schemas/Product'
+      type: array
+    Error:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    Item:
+      properties:
+        product:
+          $ref: '#/components/schemas/Product'
+        quantity:
+          format: int32
+          type: integer
+      required:
+      - product
+      - quantity
+      type: object
+    Cart:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Item'
+          type: array
+      required:
+      - items
+      type: object
+    Order:
+      properties:
+        id:
+          format: int64
+          type: integer
+        cart:
+          $ref: '#/components/schemas/Cart'
+        total:
+          type: number
+      required:
+      - cart
+      - total
+      type: object
+    Delivery:
+      example:
+        orderId: 6
+        id: 0
+        status: CREATED
+      properties:
+        id:
+          format: int64
+          type: integer
+        orderId:
+          format: int64
+          type: integer
+        status:
+          enum:
+          - CREATED
+          - DELIVERED
+          - CANCELED
+          type: string
+      required:
+      - orderId
+      - status
+      type: object
