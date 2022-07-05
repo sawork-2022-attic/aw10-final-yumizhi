@@ -113,7 +113,9 @@ GET http://localhost:8081/api/delivery
     get: 根据订单id获得物流信息
 ```
 
+### RabbitMQ
 
+使用dockerConfig中的start和stop脚本即可建立和关闭rabbitMQ
 
 ## 性能测试
 
